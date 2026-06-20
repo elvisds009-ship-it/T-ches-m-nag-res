@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tâches ménagères</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f5f4f0;
+  --surface: #ffffff;
+  --border: #e8e6df;
+  --border-strong: #d4d1c8;
+  --text: #1a1a18;
+  --muted: #8a8880;
+  --accent: #5b52d4;
+  --accent2: #3b9ee8;
+  --radius: 10px;
+  --radius-lg: 16px;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 2.5rem 1.5rem;
+}
+
+.page { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.header { margin-bottom: 2rem; }
+.header h1 { font-size: 36px; font-weight: 800; letter-spacing: -1px; display: flex; align-items: center; gap: 10px; }
+.header p { color: var(--muted); font-size: 15px; margin-top: 4px; }
+
+/* Top bar */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px; margin-bottom: 1.5rem;
+}
+
+.week-nav {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 15px; font-weight: 600;
+}
+
+.week-nav button {
+  background: none; border: 1px solid var(--border-strong);
+  width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+  font-size: 16px; display: flex; align-items: center; justify-content: center;
+  color: var(--text); transition: background 0.15s;
+}
+.week-nav button:hover { background: var(--border); }
+
+.actions { display: flex; gap: 8px; }
+
+.btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px; font-weight: 500;
+  padding: 8px 16px; border-radius: 10px; cursor: pointer;
+  border: 1.5px dashed var(--border-strong);
+  background: transparent; color: var(--text);
+  display: flex; align-items: center; gap: 6px;
+  transition: background 0.15s;
+}
+.btn:hover { background: var(--surface); }
+.btn-solid {
+  border-style: solid; border-color: var(--accent);
+  background: var(--accent); color: #fff;
+}
+.btn-solid:hover { background: #4a42c0; border-color: #4a42c0; }
+
+/* Table card */
+.table-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+table { width: 100%; border-collapse: collapse; }
+
+thead th {
+  padding: 18px 20px 12px;
+  text-align: left;
+  font-size: 13px; font-weight: 600;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  vertical-align: bottom;
+}
+
+th.child-col { text-align: center; width: 100px; }
+
+.child-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700; color: #fff;
+  margin: 0 auto 4px;
+}
+
+.child-name { font-size: 13px; font-weight: 500; color: var(--text); }
+
+.del-child-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--muted); font-size: 14px; padding: 2px;
+  margin-top: 2px; display: block; margin-left: auto; margin-right: auto;
+  opacity: 0.6; transition: opacity 0.15s;
+}
+.del-child-btn:hover { opacity: 1; color: #c0392b; }
+
+tbody tr { border-bottom: 1px solid var(--border); }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #fafaf8; }
+
+tbody td {
+  padding: 14px 20px;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+td.task-col { display: flex; align-items: center; gap: 10px; }
+td.price-col { font-size: 15px; font-weight: 600; color: var(--accent); width: 110px; }
+td.check-col { text-align: center; width: 100px; }
+
+.task-emoji { font-size: 20px; width: 28px; text-align: center; }
+.task-label { font-size: 14px; }
+
+.del-task-btn {
+  background: none; border: none; cursor: pointer;
+  color: transparent; font-size: 15px; padding: 2px 6px;
+  border-radius: 6px; transition: color 0.15s, background 0.15s;
+}
+tbody tr:hover .del-task-btn { color: var(--muted); }
+.del-task-btn:hover { color: #c0392b !important; background: #fde8e8; }
+
+/* Custom checkbox */
+.chk {
+  width: 26px; height: 26px; border-radius: 8px;
+  border: 2px solid; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto; transition: background 0.15s, border-color 0.15s;
+  font-size: 14px; color: #fff; user-select: none;
+  flex-shrink: 0;
+}
+
+/* Footer total row */
+tfoot tr { border-top: 2px solid var(--border); background: #fafaf8; }
+tfoot td {
+  padding: 16px 20px;
+  font-size: 15px; font-weight: 700;
+}
+tfoot td.total-label { display: flex; align-items: center; gap: 8px; }
+tfoot td.child-total { text-align: center; font-size: 16px; }
+
+/* Modals */
+.overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.35); z-index: 100;
+  align-items: center; justify-content: center;
+}
+.overlay.open { display: flex; }
+
+.modal {
+  background: var(--surface); border-radius: var(--radius-lg);
+  padding: 1.75rem; width: 100%; max-width: 420px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+.modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 1.25rem; }
+
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
+.field input {
+  width: 100%; font-family: 'Inter', sans-serif; font-size: 14px;
+  padding: 10px 14px; border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius); background: var(--bg); color: var(--text); outline: none;
+}
+.field input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(91,82,212,0.12); }
+
+.emoji-grid {
+  display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; margin-top: 6px;
+}
+.emoji-opt {
+  font-size: 20px; padding: 6px; border-radius: 8px; cursor: pointer;
+  text-align: center; border: 2px solid transparent; transition: background 0.1s;
+}
+.emoji-opt:hover { background: var(--bg); }
+.emoji-opt.selected { border-color: var(--accent); background: var(--bg); }
+
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1.5rem; }
+.modal-actions button { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; padding: 9px 20px; border-radius: var(--radius); cursor: pointer; }
+.btn-cancel { background: none; border: 1.5px solid var(--border-strong); color: var(--text); }
+.btn-confirm { background: var(--accent); border: none; color: #fff; }
+.btn-confirm:hover { background: #4a42c0; }
+
+.empty-row td { text-align: center; padding: 2.5rem; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <h1>🏠 Tâches ménagères</h1>
+    <p>Suivez les tâches de chaque enfant et leurs gains</p>
+  </div>
+
+  <div class="topbar">
+    <div class="week-nav">
+      <button onclick="changeWeek(-1)" title="Semaine précédente">‹</button>
+      <span id="weekLabel"></span>
+      <button onclick="changeWeek(1)" title="Semaine suivante">›</button>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="openChildModal()">👤 Ajouter un enfant</button>
+      <button class="btn" onclick="openTaskModal()">+ Ajouter une tâche</button>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <table id="mainTable">
+      <thead id="thead"></thead>
+      <tbody id="tbody"></tbody>
+      <tfoot id="tfoot"></tfoot>
+    </table>
+  </div>
+</div>
+
+<!-- Modal enfant -->
+<div class="overlay" id="childOverlay">
+  <div class="modal">
+    <h2>👤 Ajouter un enfant</h2>
+    <div class="field">
+      <label>Prénom</label>
+      <input type="text" id="childNameInput" placeholder="ex: Kalena" maxlength="20" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeChildModal()">Annuler</button>
+      <button class="btn-confirm" onclick="confirmChild()">Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal tâche -->
+<div class="overlay" id="taskOverlay">
+  <div class="modal">
+    <h2>+ Ajouter une tâche</h2>
+    <div class="field">
+      <label>Nom de la tâche</label>
+      <input type="text" id="taskNameInput" placeholder="ex: Faire la vaisselle" maxlength="50" />
+    </div>
+    <div class="field">
+      <label>Emoji</label>
+      <div class="emoji-grid" id="emojiGrid"></div>
+    </div>
+    <div class="field">
+      <label>Prix (€)</label>
+      <input type="number" id="taskPriceInput" placeholder="ex: 1.50" min="0" max="99" step="0.5" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeTaskModal()">Annuler</button>
+      <button class="btn-confirm" onclick="confirmTask()">Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const EMOJIS = ['🍽️','🧹','🛏️','🗑️','🌿','🧺','🛁','🪟','🧽','🍳','🧴','📦','🔧','🚿','🌊','🪣','🧻','🧼','🪴','💡'];
+const CHILD_COLORS = ['#5b52d4','#3b9ee8','#e85b9e','#43c98a','#f59e0b','#ef4444','#8b5cf6','#06b6d4'];
+
+let children = [];
+let tasks = [
+  { id:1, emoji:'🍽️', name:'Faire la vaisselle', price:2 },
+  { id:2, emoji:'🧹', name:"Passer l'aspirateur", price:3 },
+  { id:3, emoji:'🛏️', name:'Ranger sa chambre', price:1.5 },
+  { id:4, emoji:'🗑️', name:'Sortir les poubelles', price:1 },
+  { id:5, emoji:'🍽️', name:'Mettre la table', price:1 },
+];
+let checks = {}; // checks[weekKey][taskId][childIndex] = bool
+let weekOffset = 0;
+let nextId = 100;
+let selectedEmoji = EMOJIS[0];
+
+function weekKey(offset) {
+  const d = new Date();
+  d.setDate(d.getDate() - d.getDay() + 1 + offset * 7);
+  return d.toISOString().slice(0,10);
+}
+
+function weekLabel(offset) {
+  const monday = new Date();
+  monday.setDate(monday.getDate() - monday.getDay() + 1 + offset * 7);
+  const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
+  const fmt = d => d.toLocaleDateString('fr-FR', { day:'numeric', month:'short', year:'numeric' });
+  return fmt(monday).replace(/\s\d{4}$/, '') + ' — ' + fmt(sunday);
+}
+
+function getChecks(taskId, childIdx) {
+  const k = weekKey(weekOffset);
+  if (!checks[k]) checks[k] = {};
+  if (!checks[k][taskId]) checks[k][taskId] = {};
+  return checks[k][taskId][childIdx] || false;
+}
+
+function toggleCheck(taskId, childIdx) {
+  const k = weekKey(weekOffset);
+  if (!checks[k]) checks[k] = {};
+  if (!checks[k][taskId]) checks[k][taskId] = {};
+  checks[k][taskId][childIdx] = !checks[k][taskId][childIdx];
+  save(); render();
+}
+
+function changeWeek(d) { weekOffset += d; render(); }
+
+function childColor(i) { return CHILD_COLORS[i % CHILD_COLORS.length]; }
+function initials(name) { return name.slice(0,1).toUpperCase(); }
+
+function render() {
+  document.getElementById('weekLabel').textContent = weekLabel(weekOffset);
+
+  const thead = document.getElementById('thead');
+  const tbody = document.getElementById('tbody');
+  const tfoot = document.getElementById('tfoot');
+
+  // THEAD
+  let thHtml = `<tr>
+    <th style="width:100%">Tâches</th>
+    <th style="width:80px;text-align:center">Prix</th>`;
+  children.forEach((c, i) => {
+    const col = childColor(i);
+    thHtml += `<th class="child-col">
+      <div class="child-avatar" style="background:${col}">${initials(c)}</div>
+      <div class="child-name">${c}</div>
+      <button class="del-child-btn" onclick="removeChild(${i})" title="Supprimer">🗑</button>
+    </th>`;
+  });
+  thHtml += '</tr>';
+  thead.innerHTML = thHtml;
+
+  // TBODY
+  if (!tasks.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="' + (2 + children.length) + '">Aucune tâche. Cliquez sur « Ajouter une tâche ».</td></tr>';
+  } else {
+    tbody.innerHTML = tasks.map(t => {
+      let row = `<tr>
+        <td><div style="display:flex;align-items:center;gap:10px">
+          <span class="task-emoji">${t.emoji}</span>
+          <span class="task-label">${t.name}</span>
+          <button class="del-task-btn" onclick="removeTask(${t.id})" title="Supprimer">🗑</button>
+        </div></td>
+        <td class="price-col">${t.price.toFixed(2)} €</td>`;
+      children.forEach((c, i) => {
+        const col = childColor(i);
+        const done = getChecks(t.id, i);
+        row += `<td class="check-col">
+          <div class="chk" onclick="toggleCheck(${t.id},${i})"
+            style="border-color:${col};background:${done ? col : 'transparent'}">
+            ${done ? '✓' : ''}
+          </div>
+        </td>`;
+      });
+      row += '</tr>';
+      return row;
+    }).join('');
+  }
+
+  // TFOOT
+  let tfHtml = `<tr>
+    <td class="total-label" colspan="2">💰 Total de la semaine</td>`;
+  children.forEach((c, i) => {
+    const col = childColor(i);
+    const total = tasks.reduce((s, t) => s + (getChecks(t.id, i) ? t.price : 0), 0);
+    tfHtml += `<td class="child-total" style="color:${col}">${total.toFixed(2)} €</td>`;
+  });
+  tfHtml += '</tr>';
+  tfoot.innerHTML = tfHtml;
+}
+
+function removeChild(i) {
+  children.splice(i, 1);
+  save(); render();
+}
+
+function removeTask(id) {
+  tasks = tasks.filter(t => t.id !== id);
+  save(); render();
+}
+
+// Child modal
+function openChildModal() {
+  document.getElementById('childNameInput').value = '';
+  document.getElementById('childOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('childNameInput').focus(), 50);
+}
+function closeChildModal() { document.getElementById('childOverlay').classList.remove('open'); }
+function confirmChild() {
+  const name = document.getElementById('childNameInput').value.trim();
+  if (!name) return;
+  children.push(name);
+  closeChildModal(); save(); render();
+}
+
+// Task modal
+function openTaskModal() {
+  document.getElementById('taskNameInput').value = '';
+  document.getElementById('taskPriceInput').value = '';
+  selectedEmoji = EMOJIS[0];
+  renderEmojiGrid();
+  document.getElementById('taskOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('taskNameInput').focus(), 50);
+}
+function closeTaskModal() { document.getElementById('taskOverlay').classList.remove('open'); }
+function confirmTask() {
+  const name = document.getElementById('taskNameInput').value.trim();
+  const price = parseFloat(document.getElementById('taskPriceInput').value);
+  if (!name) return;
+  tasks.push({ id: nextId++, emoji: selectedEmoji, name, price: isNaN(price) ? 0 : price });
+  closeTaskModal(); save(); render();
+}
+
+function renderEmojiGrid() {
+  document.getElementById('emojiGrid').innerHTML = EMOJIS.map(e =>
+    `<div class="emoji-opt ${e===selectedEmoji?'selected':''}" onclick="selectEmoji('${e}')">${e}</div>`
+  ).join('');
+}
+function selectEmoji(e) { selectedEmoji = e; renderEmojiGrid(); }
+
+// Keyboard
+document.getElementById('childNameInput').addEventListener('keydown', e => { if(e.key==='Enter') confirmChild(); if(e.key==='Escape') closeChildModal(); });
+document.getElementById('taskNameInput').addEventListener('keydown', e => { if(e.key==='Enter') confirmTask(); if(e.key==='Escape') closeTaskModal(); });
+document.getElementById('taskPriceInput').addEventListener('keydown', e => { if(e.key==='Enter') confirmTask(); });
+document.getElementById('childOverlay').addEventListener('click', e => { if(e.target===e.currentTarget) closeChildModal(); });
+document.getElementById('taskOverlay').addEventListener('click', e => { if(e.target===e.currentTarget) closeTaskModal(); });
+
+function save() {
+  try { localStorage.setItem('taches_v2', JSON.stringify({ children, tasks, checks, nextId })); } catch(e) {}
+}
+function load() {
+  try {
+    const d = JSON.parse(localStorage.getItem('taches_v2'));
+    if (d) { children=d.children||[]; tasks=d.tasks||[]; checks=d.checks||{}; nextId=d.nextId||100; }
+  } catch(e) {}
+}
+
+load(); render();
+</script>
+</body>
+</html>
